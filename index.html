@@ -1,0 +1,419 @@
+<script src="http://www.google.com/jsapi" type="text/javascript"></script> 
+<script type="text/javascript">google.load("jquery", "1.3.2");</script>
+
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<!-- <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script> -->
+
+
+
+<script>
+	MathJax = {
+		chtml: {
+            scale: 0.8
+        }
+	};
+</script>
+	<script id="MathJax-script" async
+	  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+	</script>
+
+<!-- Import the 3d component -->
+<script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+
+
+<style type="text/css">
+	body {
+		font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
+		font-weight:300;
+		font-size:18px;
+		margin-left: auto;
+		margin-right: auto;
+		width: 1100px;
+	}
+	
+	h1 {
+		font-size:32px;
+		font-weight:300;
+	}
+	.line {
+		margin:5px 300;
+		height:1px;
+		background:
+			repeating-linear-gradient(to right,rgb(219, 202, 202) 0,rgb(219, 202, 202) 5px,transparent 5px,transparent 7px)
+	}
+	
+	.disclaimerbox {
+		background-color: #eee;		
+		border: 1px solid #eeeeee;
+		border-radius: 10px ;
+		-moz-border-radius: 10px ;
+		-webkit-border-radius: 10px ;
+		padding: 20px;
+	}
+
+	video.header-vid {
+		height: 140px;
+		border: 1px solid black;
+		border-radius: 10px ;
+		-moz-border-radius: 10px ;
+		-webkit-border-radius: 10px ;
+	}
+	
+	img.header-img {
+		height: 140px;
+		border: 1px solid black;
+		border-radius: 10px ;
+		-moz-border-radius: 10px ;
+		-webkit-border-radius: 10px ;
+	}
+	
+	img.rounded {
+		border: 1px solid #eeeeee;
+		border-radius: 10px ;
+		-moz-border-radius: 10px ;
+		-webkit-border-radius: 10px ;
+	}
+	
+	a:link,a:visited
+	{
+		color: #1367a7;
+		text-decoration: none;
+	}
+	a:hover {
+		color: #208799;
+	}
+	
+	td.dl-link {
+		height: 160px;
+		text-align: center;
+		font-size: 22px;
+	}
+	
+	code {
+  width: 900px;
+  font-family: 'Source Code Pro', monospace;
+  color: #000000;
+  background-color: rgb(232, 231, 231);
+  display: block;
+}
+	
+	hr
+	{
+		border: 0;
+		height: 1px;
+		background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
+	}
+	* {
+  box-sizing: border-box;
+}
+
+.column {
+  float: left;
+  width: 50.00%;
+  padding: 5px;
+}
+
+/* Clearfix (clear floats) */
+.row::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+</style>
+
+<html>
+<head>
+	<title>DeepShadow: Neural Shape From Shadows</title>
+	<meta property="og:image" content="Path to my teaser.png"/> <!-- Facebook automatically scrapes this. Go to https://developers.facebook.com/tools/debug/ if you update and want to force Facebook to rescrape. -->
+	<meta property="og:title" content="DeepShadow: Neural Shape From Shadows" />
+	<meta property="og:description" content="Recovering 3D shape using shadow maps only" />
+
+	<!-- Get from Google Analytics -->
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src=""></script> 
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+
+		gtag('config', 'UA-75863369-6');
+	</script>
+</head>
+
+<body>
+	<br>
+	<center>
+		<span style="font-size:36px">DeepShadow: Neural Shape From Shadows</span>
+		<table align=center width=600px>
+			<table align=center width=600px>
+				<tr>
+					<td align=center width=100px>
+						<center>
+							<span style="font-size:24px"><a href="https://github.com/asafkar">Asaf Karnieli</a></span>
+						</center>
+					</td>
+					<td align=center width=100px>
+						<center>
+							<span style="font-size:24px"><a href="https://www.ohadf.com/">Ohad Fried</a></span>
+						</center>
+					</td>
+					<td align=center width=100px>
+						<center>
+							<span style="font-size:24px"><a href="https://faculty.runi.ac.il/toky/">Yacov Hel-Or</a></span>
+						</center>
+					</td>
+				</tr>
+			</table>
+			<span style="font-size:22px">Department of Computer Science, Reichman University, Israel</span>
+			<br>
+			<br>
+		</table>
+	</center>
+
+	<center>
+		<table align=center width=850px>
+			<tr>
+				<td width=260px>
+					<center>
+						<img class="round" style="width:500px" src="./resources/deepshadow_overview.gif"/>
+					</center>
+				</td>
+			</tr>
+		</table>
+		<br>		<br>
+
+
+
+		<table align=center width=850px>
+			<tr>
+				<td align=center width=220px>
+					<center>
+						<span style="font-size:24px"><a href='https://arxiv.org/abs/2203.15065'>Paper [ECCV 2022]</a></span>
+					</center>
+				</td>
+				<td align=center width=150px>
+					<center>
+						<span style="font-size:24px"><a href='https://github.com/asafkar/deep_shadow'>Code</a></span><br>
+					</center>
+				</td>
+				<td align=center width=150px>
+					<center>
+						<span style="font-size:24px"><a href='https://faculty.runi.ac.il/toky/Pub/DeepShadowData.zip'>Data</a></span><br>
+					</center>
+				</td>
+				<td align=center width=150px>
+					<center>
+						<span style="font-size:24px"><a href='https://www.youtube.com/watch?v=iXPZb59wwYE'>Video</a></span><br>
+					</center>
+				</td>
+				<td align=center width=150px>
+					<center>
+						<span style="font-size:24px"><a href='https://raw.githubusercontent.com/asafkar/deepshadow/main/resources/deepshadow_poster.pdf'>Poster</a></span><br>
+					</center>
+				</td>
+				
+			</tr>
+		</table>
+
+		<br>
+		<td align=center width=150px>
+			<center>
+				<span style="font-size:24px"><a href='https://github.com/asafkar/ps_shadow_extract'>Shadow Estimation Code and Model</a></span><br>
+			</center>
+		</td>
+
+	</center>
+
+	<hr>
+
+	<table align=center width=850px>
+		<center><h1>Abstract</h1></center>
+		<tr>
+			<td>
+				We present ‘DeepShadow’, a one-shot method for
+				recovering the depth map and surface normals from photometric stereo
+				shadow maps. Previous works that try to recover the surface normals
+				from photometric stereo images treat cast shadows as a disturbance. We
+				show that the self and cast shadows not only do not disturb 3D reconstruction,
+				but can be used alone, as a strong learning signal, to recover
+				the depth map and surface normals.We demonstrate that 3D reconstruction
+				from shadows can even outperform shape-from-shading in certain
+				cases. The method does not require any pre-training or expensive labeled data, and is optimized
+				during inference time.
+			</td>
+		</tr>
+	</table>
+	<br>
+
+	<hr>
+	<center><h1>Method</h1></center>
+	<center><h3>Algorithm Overview</h3></center>
+	<table align=center width=150px>
+
+	<tr>
+		<td width=260px>
+			<center>
+				<img class="round" style="width:700px" src="./resources/algo_overview.svg"/>
+			</center>
+		</td>
+	</tr>
+	</table>
+	<br>
+	<br>
+	<div style="width:1200px; padding-left: 150px; padding-right: 170px; line-height: 1.px">
+	DeepShadow takes the light source location \(L^j\) and pixel coordinates \(({u, v)}\) as inputs, 
+	along with the estimated depth \(\hat{d}\) from the MLP, and outputs an estimate of the shadow map
+	\(\hat{S^j}\) at each pixel location. The ground-truth shadow map \(S^j\) is then used as a 
+	supervision to optimize the learned depth map \(\hat{d}\).
+	</div>
+	<br>
+
+	
+	<div class="line"></div>
+	<br>
+	<br>
+	<center><h3>Flow of our Method</h3></center>
+	<tr>
+		<td width=260px>
+			<center>
+				<img class="round" style="width:700px" src="./resources/algo_flow.svg"/>
+			</center>
+		</td>
+	</tr>
+	<div style="width:1200px; padding-left: 150px; padding-right: 170px; line-height: 1.px">
+
+				Left - The light source \(L^j\) is projected onto the image plane to receive \(\boldsymbol\ell^j\). A ray \(\mathbf{r}_i^j\) of \((u,v)\) points is created
+				between \(\boldsymbol\ell^j\) and \(\mathbf{u}_i\). Then, each point with its estimated depth \(\hat{d}\) is unprojected to world coordinates.
+				<br>
+				Right - The shadow line scan algorithm is used on points in 3D space to calculate shadowed pixels. 
+				Red points are shadowed, since their angle to the light source is smaller than \(\alpha\).
+
+				<br>
+	</div>
+
+	<hr>
+	<br>
+	<table align=center width=900px>
+			<!-- <tr> -->
+			<center><h1>Results</h1></center>
+
+			<center><h3>Partial Input Shadows</h3></center>
+			<center>
+				<img class="round" style="width:90px" src="./resources/shadows/relief_shadow1.png"/>
+				&nbsp&nbsp&nbsp 
+				<img class="round" style="width:90px" src="./resources/shadows/sculp_shadow1.png"/>
+				&nbsp&nbsp&nbsp
+				<img class="round" style="width:90px" src="./resources/shadows/cactus_shadow1.png"/>
+				&nbsp&nbsp&nbsp
+				<img class="round" style="width:90px" src="./resources/shadows/sine_surface_shadow1.png"/>
+				&nbsp&nbsp&nbsp
+				<img class="round" style="width:90px" src="./resources/shadows/bread_shadow1.png"/>
+				&nbsp&nbsp&nbsp
+				<img class="round" style="width:90px" src="./resources/shadows/rose_shadow1.png"/>
+				&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+				<br>
+				<img class="round" style="width:90px" src="./resources/shadows/relief_shadow2.png"/>
+				&nbsp&nbsp&nbsp 
+				<img class="round" style="width:90px" src="./resources/shadows/sculp_shadow2.png"/>
+				&nbsp&nbsp&nbsp
+				<img class="round" style="width:90px" src="./resources/shadows/cactus_shadow2.png"/>
+				&nbsp&nbsp&nbsp
+				<img class="round" style="width:90px" src="./resources/shadows/sine_surface_shadow2.png"/>
+				&nbsp&nbsp&nbsp
+				<img class="round" style="width:90px" src="./resources/shadows/bread_shadow2.png"/>
+				&nbsp&nbsp&nbsp
+				<img class="round" style="width:90px" src="./resources/shadows/rose_shadow2.png"/>
+				&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+			</center>
+
+			<center><h3>Depth Estimations</h3></center>
+				<center>
+					<img class="round" style="width:700px" src="./resources/depth_ours.png"/>
+				</center>
+			<center><h3>Surface Normals Estimations</h3></center>
+				<center>
+					<img class="round" style="width:700px" src="./resources/normal_ours.png"/>
+				</center>
+			<br>
+		
+			
+			<center><h3>3D Reconstruction</h3></center>
+			<center>
+			<div class="row">
+					<div class="column"> 
+					<model-viewer alt="GT Rose" camera-controls camera-orbit="0deg 90deg 1m"
+					style="width: 50%; height: 50%; top: 0px;  position: left; background-color: rgb(255, 255, 255);"
+					src="rose_mesh_gt.glb" ar ar-modes="webxr scene-viewer quick-look" 
+					seamless-poster shadow-intensity="1" camera-controls enable-pan>
+					</model-viewer>	
+					</div>			
+					
+					<div class="column">
+					<model-viewer alt="recovered Rose" camera-controls camera-orbit="0deg 90deg 1m"
+					style="width: 50%; height: 50%; top: 0px;  position: right; background-color: rgb(255, 255, 255);"
+					src="rose_mesh.glb" ar ar-modes="webxr scene-viewer quick-look" 
+					seamless-poster shadow-intensity="1" camera-controls enable-pan>
+					</model-viewer>		
+					</div>		
+			</div>
+		</center>
+		<center>
+			<div class="row">
+					<div class="column"> 
+						Ground Truth 3D
+					</div>			
+					
+					<div class="column">
+						Estimated 3D
+					</div>		
+			</div>
+		</center>
+		</tr>
+	</table>
+
+
+
+	<hr>
+
+	  
+	<table align=center width=900px>
+		<tr>
+			<td width=400px>
+				<left>
+					<center><h1>Citation</h1></center>
+					<pre><code>
+	@inproceedings{karnieli2022deepshadow,	
+		title={DeepShadow: Neural shape from shadows},
+		author={Asaf Karnieli, Ohad Fried, Yacov Hel-Or},	
+		year={2022},	
+		booktitle={ECCV},
+	}
+					</code></pre>
+				</left>
+			</td>
+		</tr>
+	</table>
+
+	<hr>
+	<br>
+	<table align=center width=900px>
+		<tr>
+			<td width=400px>
+				<left>
+					<center><h1>Acknowledgements</h1></center>
+					This work was supported by the Israeli Ministry of Science and Technology under The National Foundation for Applied Science (MIA), 
+					and by the Israel Science Foundation (grant No. 1574/21).
+				</left>
+			</td>
+		</tr>
+	</table>
+
+<br>
+<br><br><br>
+<p style="text-align:center;font-size:16px;">
+    Webpage template from <a href="http://richzhang.github.io/colorization/"> here</a>.
+</p>
+</body>
+</html>
+
