@@ -231,7 +231,18 @@
 		<center><h1>Abstract</h1></center>
 		<tr>
 			<td>
-				abstract description
+				The field of implicit neural representation has made significant progress.
+				Models such as neural radiance fields (NeRF), which uses relatively small
+				neural networks, can represent high-quality scenes and achieve state-of-the-art results for novel view
+				synthesis. Training these types of networks, however, is still computationally  expensive and the model
+				struggles with real life $360\degree$ scenes. In this work, we propose the depth distribution
+				neural radiance field (DDNeRF), a new method that significantly increases sampling efficiency along
+				rays during training, while achieving superior results for a given sampling budget. DDNeRF achieves
+				this performance by learning a more accurate representation of the density distribution along rays.
+				More specifically, the proposed framework trains a coarse model to predict the internal distribution
+				of the transparency of an input volume along each ray. This estimated distribution then guides the
+				sampling procedure of the fine model. Our method allows using fewer samples during training while
+				achieving better output quality with the same computational resources.
 			</td>
 		</tr>
 	</table>
