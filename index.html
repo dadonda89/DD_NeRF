@@ -255,34 +255,32 @@
 	<br>
 	<br>
 	<div style="width:1200px; padding-left: 150px; padding-right: 170px; line-height: 1.px">
-	DeepShadow takes the light source location \(L^j\) and pixel coordinates \(({u, v)}\) as inputs, 
-	along with the estimated depth \(\hat{d}\) from the MLP, and outputs an estimate of the shadow map
-	\(\hat{S^j}\) at each pixel location. The ground-truth shadow map \(S^j\) is then used as a 
-	supervision to optimize the learned depth map \(\hat{d}\).
+		<b>DDNeRF full pipeline:</b> (1) Draw a cone in space and split it into relatively uniform intervals along the depth axis.
+		(2) Pass these intervals through an IPE and then through the coarse network to get predictions.
+		(3) Render the coarse RGB image. (4) Approximate the density distribution with respect to the coarse samples
+		(blue dots) and their Gaussian parameters; then sample the fine samples (purple dots). (5) Pass these samples
+		through an IPE and thereafter through the fine network to get predictions. (6) Render the final RGB image and
+		depth map.
 	</div>
 	<br>
-
-	
 	<div class="line"></div>
 	<br>
 	<br>
-	<center><h3>Flow of our Method</h3></center>
+	<center><h3>Distribution estimation</h3></center>
 	<tr>
 		<td width=260px>
 			<center>
-				<img class="round" style="width:700px" src="./resources/algo_flow.svg"/>
+				<img class="round" style="width:700px" src="./resources/truncation_mixture.png"/>
 			</center>
 		</td>
 	</tr>
 	<div style="width:1200px; padding-left: 150px; padding-right: 170px; line-height: 1.px">
 
-				Left - The light source \(L^j\) is projected onto the image plane to receive \(\boldsymbol\ell^j\). A ray \(\mathbf{r}_i^j\) of \((u,v)\) points is created
-				between \(\boldsymbol\ell^j\) and \(\mathbf{u}_i\). Then, each point with its estimated depth \(\hat{d}\) is unprojected to world coordinates.
-				<br>
-				Right - The shadow line scan algorithm is used on points in 3D space to calculate shadowed pixels. 
-				Red points are shadowed, since their angle to the light source is smaller than \(\alpha\).
-
-				<br>
+		(a) PDF truncation process. The blue and orange curves are the PDF before and after
+		truncation; gray marks the region outside the section boundaries. (b) Several
+		adjacent truncated PDF distributions. Each orange truncated Gaussian is assigned to an interval;
+		The vertical dashed lines are the interval bounds and the horizontal lines are interval weights.
+		(c) We combine all distributions into one final distribution.
 	</div>
 
 	<hr>
